@@ -6,27 +6,30 @@ SYSREAD = 3
 STDIN = 0
 
 .text
+msg: .ascii "Written text: \n"
+msg_len = . - msg
 
-msg1: .ascii "Write text(5): \n"
-msg1_len = . - msg1
-
-msg2: .ascii "Written text: \n"
+msg2 .ascii "Write text(5): \n"
 msg2_len = . - msg2
 
-buf: .ascii "     "
+newline .ascii "\n"
+newline_len = . - newline
+
+.data
+buf .ascii "     "
 buf_len = . - buf
 
 .global _start
-
 _start:
+
 
 mov $SYSWRITE, %eax
 mov $STDOUT, %ebx
-mov $msg1, %ecx
-mov $msg1_len, %edx
-int $0x80
+mov $msg2, %ecx
+mov $msg2_len, %edx
+int 0x80
 
-mov $SYSREAD, %eax
+mov $SYSREAD, %aex
 mov $STDIN, %ebx
 mov $buf, %ecx
 mov $buf_len, %edx
@@ -34,17 +37,18 @@ int $0x80
 
 mov $SYSWRITE, %eax
 mov $STDOUT, %ebx
-mov $msg2, %ecx
-mov $msg2_len, %edx
-int $0x80
+mov $msg, %ecx
+mov $msg_len, %edx
+int 0x80
 
 mov $SYSWRITE, %eax
 mov $STDOUT, %ebx
 mov $buf, %ecx
 mov $buf_len, %edx
-int $0x80
+int 0x80
 
 
 mov $SYSEXIT, %eax
 mov $EXIT_SUCCESS, %ebx
 int $0x80
+
