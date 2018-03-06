@@ -10,9 +10,13 @@ STDIN = 0
 msg1: .ascii "Write text(5): \n"
 msg1_len = . - msg1
 
-msg2: .ascii "Written text: \n"
+msg2: .ascii "Written text: "
 msg2_len = . - msg2
 
+msg3: .ascii "\n"
+msg3_len = . - msg3
+
+.data
 buf: .ascii "     "
 buf_len = . - buf
 
@@ -44,6 +48,11 @@ mov $buf, %ecx
 mov $buf_len, %edx
 int $0x80
 
+mov $SYSWRITE, %eax
+mov $STDOUT, %ebx
+mov $msg3, %ecx
+mov $msg3_len, %edx
+int $0x80
 
 mov $SYSEXIT, %eax
 mov $EXIT_SUCCESS, %ebx
