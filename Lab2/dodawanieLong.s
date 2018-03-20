@@ -14,13 +14,13 @@ msg_len = . - msg
 .data
 
 suma1:
-.long 0xF001, 0xF100, 0x1012, 0x0000
+.long 0xF0010000, 0xF1000000, 0x00001012, 0x00000000
 
 suma2:
-.long 0x1110, 0x1001, 0x10A0, 0x1111 
+.long 0x11100000, 0x10010000, 0x000010A0, 0x11000011 
 
 wynik:
-.long 0x0000, 0x0000, 0x0000, 0x0000, 0x0000
+.long 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00010000
 
 wynik_len = . - wynik
 
@@ -45,16 +45,16 @@ clc
 popf
 
 #poprzesuwanie wartości
-mov suma1(,%edi,4), %ax
-mov suma2(,%edi,4), %bx
+mov suma1(,%edi,4), %eax
+mov suma2(,%edi,4), %ebx
 
 #dodawanko
-adc %ax, %bx
+adc %eax, %ebx
 
 #wynik! marsz do wyniku!
-#mov %bx,wynik(,%edi,4)
+#mov %ebx,wynik(,%edi,4)
 
-push %bx
+push %ebx
 
 #zapisujemy flagi na stosik, by nam nie znikły
 pushf
@@ -71,21 +71,23 @@ jmp addloop
 
 carry:
 popf
-mov $0,%ax
-mov $0,%bx
-adc %ax,%bx
-push %bx
-jmp endend
+mov $0,%eax
+mov $0,%ebx
+adc %eax,%ebx
+push %ebx
+jmp end
 
 end:
 mov $4, %edi
 
 #pop %ecx
 
+#mov %ecx,wynik(,%edi,4)
+
 #mov $SYSWRITE, %eax
 #mov $STDOUT, %ebx
 #mov $wynik, %ecx
-#mov $4, %edx
+#mov $32, %edx
 #int $0x80
 
 #porownanko
