@@ -22,32 +22,82 @@ suma2:
 wynik:
 .long 0x0000, 0x0000, 0x0000, 0x0000, 0x0000
 
+wynik_len = . - wynik
+
 
 
 .global _start
 _start:
 
-mov $4, %edx
+#liczba iteracji, czyli 3,2,1,0 - razem 4
+mov $3, %edi
+
+#puszujemy czyste flagi na stos, by za 1 razem nie było CF
+clc
+pushf
 
 addloop:
-mov suma1(,%edx,4), %eax
-mov suma2(,%edx,4), %ebx
-pushl %eax
-subl $1 , %edx
 
-cmpl $0 , %edx
-je end
+#czyszczenie wszystkich flag, zeby adc nie uwzględniało złego przeniesienia
+clc 
+
+#popfc #pobranie flagi przeniesienia ze stosu
+popf
+
+#poprzesuwanie wartości
+mov suma1(,%edi,4), %ax
+mov suma2(,%edi,4), %bx
+
+#dodawanko
+adc %ax, %bx
+
+#wynik! marsz do wyniku!
+#mov %bx,wynik(,%edi,4)
+
+push %bx
+
+#zapisujemy flagi na stosik, by nam nie znikły
+pushf
+
+#porownanko
+cmp $0 , %edi
+jz carry
+
+#i--
+sub $1, %edi
 
 jmp addloop
 
+
+carry:
+popf
+mov $0,%ax
+mov $0,%bx
+adc %ax,%bx
+push %bx
+jmp endend
+
 end:
-mov $SYSWRITE, %eax
-mov $STDOUT, %ebx
-mov $msg, %ecx
-mov $msg_len, %edx
-int $0x80
+mov $4, %edi
 
+#pop %ecx
 
+#mov $SYSWRITE, %eax
+#mov $STDOUT, %ebx
+#mov $wynik, %ecx
+#mov $4, %edx
+#int $0x80
+
+#porownanko
+cmp $0 , %edi
+jz endend
+
+#i--
+sub $1, %edi
+
+jmp end
+
+endend:
 
 mov $SYSEXIT, %eax
 mov $EXIT_SUCCESS, %ebx
