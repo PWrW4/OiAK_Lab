@@ -20,7 +20,7 @@ suma2:
 .long 0x11100000, 0x10010000, 0x000010A0, 0x11000011 
 
 wynik:
-.long 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00010000
+.long 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000
 
 wynik_len = . - wynik
 
@@ -75,20 +75,18 @@ mov $0,%eax
 mov $0,%ebx
 adc %eax,%ebx
 push %ebx
+mov $4, %edi
 jmp end
 
 end:
-mov $4, %edi
 
-#pop %ecx
+pop %ecx
 
-#mov %ecx,wynik(,%edi,4)
-
-#mov $SYSWRITE, %eax
-#mov $STDOUT, %ebx
+mov $SYSWRITE, %eax
+mov $STDOUT, %ebx
 #mov $wynik, %ecx
-#mov $32, %edx
-#int $0x80
+mov $32, %edx
+int $0x80
 
 #porownanko
 cmp $0 , %edi
