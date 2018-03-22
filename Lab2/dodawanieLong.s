@@ -82,11 +82,11 @@ end:
 
 pop %ecx
 
-mov $SYSWRITE, %eax
-mov $STDOUT, %ebx
+#mov $SYSWRITE, %eax
+#mov $STDOUT, %ebx
 #mov $wynik, %ecx
-mov $32, %edx
-int $0x80
+#mov $32, %edx
+#int $0x80
 
 #porownanko
 cmp $0 , %edi
