@@ -13,11 +13,11 @@ msg_len = . - msg
 
 .data
 
-suma1:
-.long 0xF0010000, 0xF1000000, 0x00001012, 0x00000000
+odjemna:
+.long 0x01111111, 0x11111B11, 0x12121212, 0x11110000
 
-suma2:
-.long 0x11100000, 0x10010000, 0x000010A0, 0x11000011 
+odjemnik:
+.long 0x11100000, 0x10010A00, 0x000010A0, 0x11000011 
 
 #wynik:
 #.long 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000
@@ -45,11 +45,11 @@ clc
 popf
 
 #poprzesuwanie wartości
-mov suma1(,%edi,4), %eax
-mov suma2(,%edi,4), %ebx
+mov odjemnik(,%edi,4), %eax
+mov odjemna(,%edi,4), %ebx
 
 #dodawanko
-adc %eax, %ebx
+sbb %eax, %ebx
 
 #wynik! marsz do wyniku!
 #mov %ebx,wynik(,%edi,4)
@@ -73,7 +73,7 @@ carry:
 popf
 mov $0,%eax
 mov $0,%ebx
-adc %eax,%ebx
+sbb %eax,%ebx
 push %ebx
 mov $4, %edi
 jmp end
