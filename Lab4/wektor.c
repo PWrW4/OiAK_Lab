@@ -9,9 +9,10 @@ struct vec {
 
 struct vec Suma(struct vec a,struct vec b){
 asm( 
+    "movups "
     "add %%ebx, %%eax"
-   : "=a" (a.a)
-   : "b" (b.a)
+   : "=m" (a)
+   : "m" (b)
     );
     return a;
 }
