@@ -1,0 +1,2 @@
+gcc  -c wektor.c -o wektor.o
+gcc  wektor.o -o wektor

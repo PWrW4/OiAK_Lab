@@ -11,3 +11,5 @@ http://lucc.pl/inf/architektura_komputerow_2/kruk_-_asembler_-_kurs_rogramowania
 https://www.youtube.com/watch?v=CfCGkG8yJ78	// "x64 Assembly and C++ Tutorial 52: Structures"
 
 https://ww2.ii.uj.edu.pl/~kapela/pn/print-lecture-and-sources.php //best of all
+
+https://wiki.osdev.org/Inline_Assembly
