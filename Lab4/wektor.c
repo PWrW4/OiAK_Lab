@@ -9,12 +9,12 @@ struct vec {
 
 struct vec Suma(struct vec a,struct vec b){
 asm( 
-    "movaps $0, %%xmm0"
-    "movaps $1, %%xmm1"
-    "addps %%xmm1, %%xmm0"
-    "movaps %%xmm0, $0"
-   : "=m" (&a)
-   : "m" (&b)
+    "movaps %0, %%xmm0\n\t"
+    "movaps %1, %%xmm1\n\t"
+    "addps %%xmm1, %%xmm0\n\t"
+    "movaps %%xmm0, %0\n\t"
+   : "=m" (a)
+   : "m" (b)
     );
     return a;
 }
