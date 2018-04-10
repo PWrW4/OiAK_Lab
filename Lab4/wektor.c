@@ -2,12 +2,33 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define sizeTable 2048
+#define naWektorach 1
+
+
+clock_t startTime;
+
+void startCounter(){
+    startTime = clock();
+}
+
+double stopCounter(){
+    return ((double)clock() - startTime)/CLOCKS_PER_SEC*1000.0;
+}
+
 struct vec {
     float a;
     float b;
     float c;
     float d;
 };
+
+struct vec a[sizeTable];
+struct vec b[sizeTable];
+struct vec result1[sizeTable];
+struct vec result2[sizeTable];
+struct vec result3[sizeTable];
+struct vec result4[sizeTable];
 
 struct vec Sum(struct vec a,struct vec b){
 asm( 
@@ -57,15 +78,42 @@ asm(
     return a;
 }
 
+void makeRandNumb(){
+    for(int i=0;i<sizeTable;i++){
+        a[i].a = (float)(rand()%1000000)/100.0f;
+        a[i].b = (float)(rand()%1000000)/100.0f;
+        a[i].c = (float)(rand()%1000000)/100.0f;
+        a[i].d = (float)(rand()%1000000)/100.0f;
+        b[i].a = (float)(rand()%1000000)/100.0f;
+        b[i].b = (float)(rand()%1000000)/100.0f;
+        b[i].c = (float)(rand()%1000000)/100.0f;
+        b[i].d = (float)(rand()%1000000)/100.0f;
+    }
+}
+
+void NaWektorach(){
+    double timeToShow;
+    
+    startCounter();
+    for(int i=0;i<sizeTable;i++){
+        result1[i] = Sum(a[i],b[i]);
+    }
+    timeToShow = stopCounter();
+
+    printf("%lf \n",timeToShow);
+}
+
 int main(){
-    struct  vec v1;
-    struct  vec v2;
-    printf("Podaj 4 liczby : ");
-    scanf("%f%f%f%f",&v1.a,&v1.b,&v1.c,&v1.d);
-    printf("Podaj 4 liczby : ");
-    scanf("%f%f%f%f",&v2.a,&v2.b,&v2.c,&v2.d);
-    v1 = Sub(v1,v2);
-    printf("\n Suma = %f %f %f %f \n", v1.a, v1.b, v1.c, v1.d);
+    srand(time(NULL));
+    makeRandNumb();
+
+    if(naWektorach){
+        NaWektorach();
+    }else{
+
+    }
+
+
 
     
     return 0;
