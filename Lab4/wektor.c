@@ -285,7 +285,7 @@ void SIMD(){
 void SISD(){
     double timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv;
 
-        for(int j=0;j<repeatNumber;j++){
+    for(int j=0;j<repeatNumber;j++){
         startCounter();
         for(int i=0;i<sizeTable;i++){
             SumSISD(a[i],b[i],&resultSum[i]);
