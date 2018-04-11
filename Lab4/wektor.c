@@ -25,57 +25,53 @@ struct vec {
 
 struct vec a[sizeTable];
 struct vec b[sizeTable];
-struct vec result1[sizeTable];
-struct vec result2[sizeTable];
-struct vec result3[sizeTable];
-struct vec result4[sizeTable];
+struct vec resultSum[sizeTable];
+struct vec resultSub[sizeTable];
+struct vec resultMul[sizeTable];
+struct vec resultDiv[sizeTable];
 
-struct vec Sum(struct vec a,struct vec b){
+void Sum(struct vec a,struct vec b,struct vec res){
 asm( 
-    "movaps %0, %%xmm0\n\t"
-    "movaps %1, %%xmm1\n\t"
+    "movaps %1, %%xmm0\n\t"
+    "movaps %2, %%xmm1\n\t"
     "addps %%xmm1, %%xmm0\n\t"
     "movaps %%xmm0, %0\n\t"
-   : "=m" (a)
-   : "m" (b)
+   : "=m" (res)
+   : "m" (a),"m" (b)
     );
-    return a;
 }
 
-struct vec Sub(struct vec a,struct vec b){
+void Sub(struct vec a,struct vec b,struct vec res){
 asm( 
-    "movaps %0, %%xmm0\n\t"
-    "movaps %1, %%xmm1\n\t"
+    "movaps %1, %%xmm0\n\t"
+    "movaps %2, %%xmm1\n\t"
     "subps %%xmm1, %%xmm0\n\t"
     "movaps %%xmm0, %0\n\t"
-   : "=m" (a)
-   : "m" (b)
+   : "=m" (res)
+   : "m" (a),"m" (b)
     );
-    return a;
 }
 
-struct vec Div(struct vec a,struct vec b){
+void Div(struct vec a,struct vec b,struct vec res){
 asm( 
-    "movaps %0, %%xmm0\n\t"
-    "movaps %1, %%xmm1\n\t"
+    "movaps %1, %%xmm0\n\t"
+    "movaps %2, %%xmm1\n\t"
     "divps %%xmm1, %%xmm0\n\t"
     "movaps %%xmm0, %0\n\t"
-   : "=m" (a)
-   : "m" (b)
+   : "=m" (res)
+   : "m" (a),"m" (b)
     );
-    return a;
 }
 
-struct vec Mul(struct vec a,struct vec b){
+void Mul(struct vec a,struct vec b,struct vec res){
 asm( 
-    "movaps %0, %%xmm0\n\t"
-    "movaps %1, %%xmm1\n\t"
+    "movaps %1, %%xmm0\n\t"
+    "movaps %2, %%xmm1\n\t"
     "mulps %%xmm1, %%xmm0\n\t"
     "movaps %%xmm0, %0\n\t"
-   : "=m" (a)
-   : "m" (b)
+   : "=m" (res)
+   : "m" (a),"m" (b)
     );
-    return a;
 }
 
 void makeRandNumb(){
@@ -91,16 +87,40 @@ void makeRandNumb(){
     }
 }
 
-void NaWektorach(){
-    double timeToShow;
+void SIMD(){
+    double timeToShowSum,timeToShowDiv,timeToShowMul,timeToShowSub;
     
     startCounter();
     for(int i=0;i<sizeTable;i++){
-        result1[i] = Sum(a[i],b[i]);
+        Sum(a[i],b[i],resultSum[i]);
     }
-    timeToShow = stopCounter();
+    timeToShowSum = stopCounter();
 
-    printf("%lf \n",timeToShow);
+        startCounter();
+    for(int i=0;i<sizeTable;i++){
+        Div(a[i],b[i],resultDiv[i]);
+    }
+    timeToShowDiv = stopCounter();
+
+        startCounter();
+    for(int i=0;i<sizeTable;i++){
+        Mul(a[i],b[i],resultMul[i]);
+    }
+    timeToShowMul = stopCounter();
+
+        startCounter();
+    for(int i=0;i<sizeTable;i++){
+        Sub(a[i],b[i],resultSub[i]);
+    }
+    timeToShowSub = stopCounter();
+
+    printf("+ %lf \n- %lf \n* %lf \n/ %lf \n",timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);
+}
+
+void SISD(){
+    double timeToShowSum,timeToShowDiv,timeToShowMul,timeToShowSub;
+
+    printf("+ %lf \n- %lf \n* %lf \n/ %lf \n",timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);
 }
 
 int main(){
@@ -108,9 +128,9 @@ int main(){
     makeRandNumb();
 
     if(naWektorach){
-        NaWektorach();
+        SIMD();
     }else{
-
+        SISD();
     }
 
 
