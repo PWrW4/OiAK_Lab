@@ -30,46 +30,46 @@ struct vec resultSub[sizeTable];
 struct vec resultMul[sizeTable];
 struct vec resultDiv[sizeTable];
 
-void Sum(struct vec a,struct vec b,struct vec res){
+void Sum(struct vec a,struct vec b,struct vec* res){
 asm( 
     "movaps %1, %%xmm0\n\t"
     "movaps %2, %%xmm1\n\t"
     "addps %%xmm1, %%xmm0\n\t"
     "movaps %%xmm0, %0\n\t"
-   : "=m" (res)
+   : "=m" (*res)
    : "m" (a),"m" (b)
     );
 }
 
-void Sub(struct vec a,struct vec b,struct vec res){
+void Sub(struct vec a,struct vec b,struct vec* res){
 asm( 
     "movaps %1, %%xmm0\n\t"
     "movaps %2, %%xmm1\n\t"
     "subps %%xmm1, %%xmm0\n\t"
     "movaps %%xmm0, %0\n\t"
-   : "=m" (res)
+   : "=m" (*res)
    : "m" (a),"m" (b)
     );
 }
 
-void Div(struct vec a,struct vec b,struct vec res){
+void Div(struct vec a,struct vec b,struct vec* res){
 asm( 
     "movaps %1, %%xmm0\n\t"
     "movaps %2, %%xmm1\n\t"
     "divps %%xmm1, %%xmm0\n\t"
     "movaps %%xmm0, %0\n\t"
-   : "=m" (res)
+   : "=m" (*res)
    : "m" (a),"m" (b)
     );
 }
 
-void Mul(struct vec a,struct vec b,struct vec res){
+void Mul(struct vec a,struct vec b,struct vec* res){
 asm( 
     "movaps %1, %%xmm0\n\t"
     "movaps %2, %%xmm1\n\t"
     "mulps %%xmm1, %%xmm0\n\t"
     "movaps %%xmm0, %0\n\t"
-   : "=m" (res)
+   : "=m" (*res)
    : "m" (a),"m" (b)
     );
 }
@@ -92,25 +92,25 @@ void SIMD(){
     
     startCounter();
     for(int i=0;i<sizeTable;i++){
-        Sum(a[i],b[i],resultSum[i]);
+        Sum(a[i],b[i],&resultSum[i]);
     }
     timeToShowSum = stopCounter();
 
         startCounter();
     for(int i=0;i<sizeTable;i++){
-        Div(a[i],b[i],resultDiv[i]);
+        Div(a[i],b[i],&resultDiv[i]);
     }
     timeToShowDiv = stopCounter();
 
         startCounter();
     for(int i=0;i<sizeTable;i++){
-        Mul(a[i],b[i],resultMul[i]);
+        Mul(a[i],b[i],&resultMul[i]);
     }
     timeToShowMul = stopCounter();
 
         startCounter();
     for(int i=0;i<sizeTable;i++){
-        Sub(a[i],b[i],resultSub[i]);
+        Sub(a[i],b[i],&resultSub[i]);
     }
     timeToShowSub = stopCounter();
 
