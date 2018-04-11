@@ -2,9 +2,13 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define sizeTable 2048
-#define naWektorach 1
+//2048 = 4*512
+//4096 = 4*1024
+//8192 = 4*2048
 
+#define sizeTable 2048 
+#define naWektorach 1
+#define repeatNumber 10
 
 clock_t startTime;
 
@@ -88,39 +92,46 @@ void makeRandNumb(){
 }
 
 void SIMD(){
-    double timeToShowSum,timeToShowDiv,timeToShowMul,timeToShowSub;
+    double timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv;
     
-    startCounter();
-    for(int i=0;i<sizeTable;i++){
-        Sum(a[i],b[i],&resultSum[i]);
-    }
-    timeToShowSum = stopCounter();
-
+    for(int j=0;j<repeatNumber;j++){
         startCounter();
-    for(int i=0;i<sizeTable;i++){
-        Div(a[i],b[i],&resultDiv[i]);
-    }
-    timeToShowDiv = stopCounter();
+        for(int i=0;i<sizeTable;i++){
+            Sum(a[i],b[i],&resultSum[i]);
+        }
+        timeToShowSum += stopCounter();
 
-        startCounter();
-    for(int i=0;i<sizeTable;i++){
-        Mul(a[i],b[i],&resultMul[i]);
-    }
-    timeToShowMul = stopCounter();
+            startCounter();
+        for(int i=0;i<sizeTable;i++){
+            Div(a[i],b[i],&resultDiv[i]);
+        }
+        timeToShowDiv += stopCounter();
 
-        startCounter();
-    for(int i=0;i<sizeTable;i++){
-        Sub(a[i],b[i],&resultSub[i]);
-    }
-    timeToShowSub = stopCounter();
+            startCounter();
+        for(int i=0;i<sizeTable;i++){
+            Mul(a[i],b[i],&resultMul[i]);
+        }
+        timeToShowMul += stopCounter();
 
-    printf("+ %lf \n- %lf \n* %lf \n/ %lf \n",timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);
+            startCounter();
+        for(int i=0;i<sizeTable;i++){
+            Sub(a[i],b[i],&resultSub[i]);
+        }
+        timeToShowSub += stopCounter();
+    }
+
+    timeToShowSum = timeToShowSum/(float)repeatNumber;
+    timeToShowDiv = timeToShowDiv/(float)repeatNumber;
+    timeToShowMul = timeToShowMul/(float)repeatNumber;
+    timeToShowSub = timeToShowSub/(float)repeatNumber;
+
+    printf("Liczba liczb: %d\nSredni czas [ms]: \n+ %lf \n- %lf \n* %lf \n/ %lf \n",(4*sizeTable),timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);;
 }
 
 void SISD(){
-    double timeToShowSum,timeToShowDiv,timeToShowMul,timeToShowSub;
+    double timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv;
 
-    printf("+ %lf \n- %lf \n* %lf \n/ %lf \n",timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);
+    printf("Liczba liczb: %d\nSredni czas [ms]: \n+ %lf \n- %lf \n* %lf \n/ %lf \n",(4*sizeTable),timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);
 }
 
 int main(){
@@ -128,8 +139,10 @@ int main(){
     makeRandNumb();
 
     if(naWektorach){
+        printf("Typ obliczen: SIMD\n");
         SIMD();
     }else{
+        printf("Typ obliczen: SISD\n");
         SISD();
     }
 
