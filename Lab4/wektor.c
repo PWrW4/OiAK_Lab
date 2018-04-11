@@ -6,8 +6,8 @@
 //4096 = 4*1024
 //8192 = 4*2048
 
-#define sizeTable 2048 
-#define naWektorach 1
+#define sizeTable 8192 
+#define naWektorach 0
 #define repeatNumber 10
 
 clock_t startTime;
@@ -34,7 +34,8 @@ struct vec resultSub[sizeTable];
 struct vec resultMul[sizeTable];
 struct vec resultDiv[sizeTable];
 
-void Sum(struct vec a,struct vec b,struct vec* res){
+//SIMD-------------------------------------------------
+void SumSIMD(struct vec a,struct vec b,struct vec* res){
 asm( 
     "movaps %1, %%xmm0\n\t"
     "movaps %2, %%xmm1\n\t"
@@ -45,7 +46,7 @@ asm(
     );
 }
 
-void Sub(struct vec a,struct vec b,struct vec* res){
+void SubSIMD(struct vec a,struct vec b,struct vec* res){
 asm( 
     "movaps %1, %%xmm0\n\t"
     "movaps %2, %%xmm1\n\t"
@@ -56,7 +57,7 @@ asm(
     );
 }
 
-void Div(struct vec a,struct vec b,struct vec* res){
+void DivSIMD(struct vec a,struct vec b,struct vec* res){
 asm( 
     "movaps %1, %%xmm0\n\t"
     "movaps %2, %%xmm1\n\t"
@@ -67,7 +68,7 @@ asm(
     );
 }
 
-void Mul(struct vec a,struct vec b,struct vec* res){
+void MulSIMD(struct vec a,struct vec b,struct vec* res){
 asm( 
     "movaps %1, %%xmm0\n\t"
     "movaps %2, %%xmm1\n\t"
@@ -76,6 +77,159 @@ asm(
    : "=m" (*res)
    : "m" (a),"m" (b)
     );
+}
+
+//SISD-------------------------------------------------
+void SumSISD(struct vec a,struct vec b,struct vec *res){
+    
+asm( 
+    "fld %4\n\t"
+    "fadd %8\n\t"
+    "fstp %0\n\t"
+
+    "fld %5\n\t"
+    "fadd %7\n\t"
+    "fstp %1\n\t"
+
+    "fld %6\n\t"
+    "fadd %10\n\t"
+    "fstp %2\n\t"
+
+    "fld %7\n\t"
+    "fadd %11\n\t"
+    "fstp %3\n\t"
+    
+    
+
+
+   :    "=m" (res->a), //0
+        "=m" (res->b), //1
+        "=m" (res->c), //2
+        "=m" (res->d)  //3
+   :    "m" (a.a), //4
+        "m" (a.b), //5
+        "m" (a.c), //6
+        "m" (a.d), //7
+        "m" (b.a), //8
+        "m" (b.b), //9
+        "m" (b.c), //10
+        "m" (b.d) //11       
+    );
+
+}
+
+void SubSISD(struct vec a,struct vec b,struct vec* res){
+
+asm( 
+    "fld %4\n\t"
+    "fsub %8\n\t"
+    "fstp %0\n\t"
+
+    "fld %5\n\t"
+    "fsub %7\n\t"
+    "fstp %1\n\t"
+
+    "fld %6\n\t"
+    "fsub %10\n\t"
+    "fstp %2\n\t"
+
+    "fld %7\n\t"
+    "fsub %11\n\t"
+    "fstp %3\n\t"
+    
+    
+
+
+   :    "=m" (res->a), //0
+        "=m" (res->b), //1
+        "=m" (res->c), //2
+        "=m" (res->d)  //3
+   :    "m" (a.a), //4
+        "m" (a.b), //5
+        "m" (a.c), //6
+        "m" (a.d), //7
+        "m" (b.a), //8
+        "m" (b.b), //9
+        "m" (b.c), //10
+        "m" (b.d) //11       
+    );
+
+}
+
+void DivSISD(struct vec a,struct vec b,struct vec* res){
+
+asm( 
+    "fld %4\n\t"
+    "fdiv %8\n\t"
+    "fstp %0\n\t"
+
+    "fld %5\n\t"
+    "fdiv %7\n\t"
+    "fstp %1\n\t"
+
+    "fld %6\n\t"
+    "fdiv %10\n\t"
+    "fstp %2\n\t"
+
+    "fld %7\n\t"
+    "fdiv %11\n\t"
+    "fstp %3\n\t"
+    
+    
+
+
+   :    "=m" (res->a), //0
+        "=m" (res->b), //1
+        "=m" (res->c), //2
+        "=m" (res->d)  //3
+   :    "m" (a.a), //4
+        "m" (a.b), //5
+        "m" (a.c), //6
+        "m" (a.d), //7
+        "m" (b.a), //8
+        "m" (b.b), //9
+        "m" (b.c), //10
+        "m" (b.d) //11       
+    ); 
+
+}
+
+void MulSISD(struct vec a,struct vec b,struct vec* res){
+
+asm( 
+    "fld %4\n\t"
+    "fmul %8\n\t"
+    "fstp %0\n\t"
+
+    "fld %5\n\t"
+    "fmul %7\n\t"
+    "fstp %1\n\t"
+
+    "fld %6\n\t"
+    "fmul %10\n\t"
+    "fstp %2\n\t"
+
+    "fld %7\n\t"
+    "fmul %11\n\t"
+    "fstp %3\n\t"
+    
+    
+
+
+   :    "=m" (res->a), //0
+        "=m" (res->b), //1
+        "=m" (res->c), //2
+        "=m" (res->d)  //3
+   :    "m" (a.a), //4
+        "m" (a.b), //5
+        "m" (a.c), //6
+        "m" (a.d), //7
+        "m" (b.a), //8
+        "m" (b.b), //9
+        "m" (b.c), //10
+        "m" (b.d) //11       
+    );
+ 
 }
 
 void makeRandNumb(){
@@ -97,25 +251,25 @@ void SIMD(){
     for(int j=0;j<repeatNumber;j++){
         startCounter();
         for(int i=0;i<sizeTable;i++){
-            Sum(a[i],b[i],&resultSum[i]);
+            SumSIMD(a[i],b[i],&resultSum[i]);
         }
         timeToShowSum += stopCounter();
 
             startCounter();
         for(int i=0;i<sizeTable;i++){
-            Div(a[i],b[i],&resultDiv[i]);
+            DivSIMD(a[i],b[i],&resultDiv[i]);
         }
         timeToShowDiv += stopCounter();
 
             startCounter();
         for(int i=0;i<sizeTable;i++){
-            Mul(a[i],b[i],&resultMul[i]);
+            MulSIMD(a[i],b[i],&resultMul[i]);
         }
         timeToShowMul += stopCounter();
 
             startCounter();
         for(int i=0;i<sizeTable;i++){
-            Sub(a[i],b[i],&resultSub[i]);
+            SubSIMD(a[i],b[i],&resultSub[i]);
         }
         timeToShowSub += stopCounter();
     }
@@ -130,6 +284,37 @@ void SIMD(){
 
 void SISD(){
     double timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv;
+
+        for(int j=0;j<repeatNumber;j++){
+        startCounter();
+        for(int i=0;i<sizeTable;i++){
+            SumSISD(a[i],b[i],&resultSum[i]);
+        }
+        timeToShowSum += stopCounter();
+
+            startCounter();
+        for(int i=0;i<sizeTable;i++){
+            DivSISD(a[i],b[i],&resultDiv[i]);
+        }
+        timeToShowDiv += stopCounter();
+
+            startCounter();
+        for(int i=0;i<sizeTable;i++){
+            MulSISD(a[i],b[i],&resultMul[i]);
+        }
+        timeToShowMul += stopCounter();
+
+            startCounter();
+        for(int i=0;i<sizeTable;i++){
+            SubSISD(a[i],b[i],&resultSub[i]);
+        }
+        timeToShowSub += stopCounter();
+    }
+
+    timeToShowSum = timeToShowSum/(float)repeatNumber;
+    timeToShowDiv = timeToShowDiv/(float)repeatNumber;
+    timeToShowMul = timeToShowMul/(float)repeatNumber;
+    timeToShowSub = timeToShowSub/(float)repeatNumber;
 
     printf("Liczba liczb: %d\nSredni czas [ms]: \n+ %lf \n- %lf \n* %lf \n/ %lf \n",(4*sizeTable),timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);
 }
