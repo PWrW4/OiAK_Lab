@@ -6,8 +6,13 @@
 //4096 = 4*1024
 //8192 = 4*2048
 
+//linuxik na pendrive
+//mierzenie czasu nie w funkcji
+//mierzenie wywołania czasu samych funkcji (bez for itd)
+//przekazywanie i obliczanie po 1 parametrze
+
 #define sizeTable 8192 
-#define naWektorach 0
+#define naWektorach 1
 #define repeatNumber 10
 
 clock_t startTime;
