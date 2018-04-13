@@ -9,11 +9,11 @@
 //linuxik na pendrive -- done
 //mierzenie czasu nie w funkcji -- done
 //mierzenie wywołania czasu samych funkcji (bez for itd) -- done
-//przekazywanie i obliczanie po 1 parametrze??
+//przekazywanie i obliczanie po 1 parametrze -- chyba bez sensu, wywolanie funkcji jest kosztowne i na pewnio wyjdzie dluzej, ale przez 4x wieksza ilosc wywolania funkcji
 
 #define sizeTable 2048 
 #define naWektorach 0
-#define repeatNumber 100
+#define repeatNumber 10000
 
 clock_t startTime;
 
