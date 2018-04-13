@@ -6,14 +6,14 @@
 //4096 = 4*1024
 //8192 = 4*2048
 
-//linuxik na pendrive
-//mierzenie czasu nie w funkcji
-//mierzenie wywołania czasu samych funkcji (bez for itd)
-//przekazywanie i obliczanie po 1 parametrze
+//linuxik na pendrive -- done
+//mierzenie czasu nie w funkcji -- done
+//mierzenie wywołania czasu samych funkcji (bez for itd) -- done
+//przekazywanie i obliczanie po 1 parametrze??
 
-#define sizeTable 8192 
-#define naWektorach 1
-#define repeatNumber 10
+#define sizeTable 2048 
+#define naWektorach 0
+#define repeatNumber 100
 
 clock_t startTime;
 
@@ -254,35 +254,40 @@ void SIMD(){
     double timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv;
     
     for(int j=0;j<repeatNumber;j++){
-        startCounter();
+
         for(int i=0;i<sizeTable;i++){
+            startTime = clock();
             SumSIMD(a[i],b[i],&resultSum[i]);
+            timeToShowSum += ((double)clock() - startTime)/CLOCKS_PER_SEC*1000.0;
         }
-        timeToShowSum += stopCounter();
+         
 
-            startCounter();
         for(int i=0;i<sizeTable;i++){
+            startTime = clock();
             DivSIMD(a[i],b[i],&resultDiv[i]);
+            timeToShowDiv += ((double)clock() - startTime)/CLOCKS_PER_SEC*1000.0;
         }
-        timeToShowDiv += stopCounter();
+         
 
-            startCounter();
         for(int i=0;i<sizeTable;i++){
+            startTime = clock();
             MulSIMD(a[i],b[i],&resultMul[i]);
+            timeToShowMul += ((double)clock() - startTime)/CLOCKS_PER_SEC*1000.0;
         }
-        timeToShowMul += stopCounter();
+        
 
-            startCounter();
         for(int i=0;i<sizeTable;i++){
+            startTime = clock();
             SubSIMD(a[i],b[i],&resultSub[i]);
+            timeToShowSub += ((double)clock() - startTime)/CLOCKS_PER_SEC*1000.0;
         }
-        timeToShowSub += stopCounter();
+
     }
 
-    timeToShowSum = timeToShowSum/(float)repeatNumber;
-    timeToShowDiv = timeToShowDiv/(float)repeatNumber;
-    timeToShowMul = timeToShowMul/(float)repeatNumber;
-    timeToShowSub = timeToShowSub/(float)repeatNumber;
+    timeToShowSum = timeToShowSum/(float)(repeatNumber*sizeTable);
+    timeToShowDiv = timeToShowDiv/(float)(repeatNumber*sizeTable);
+    timeToShowMul = timeToShowMul/(float)(repeatNumber*sizeTable);
+    timeToShowSub = timeToShowSub/(float)(repeatNumber*sizeTable);
 
     printf("Liczba liczb: %d\nSredni czas [ms]: \n+ %lf \n- %lf \n* %lf \n/ %lf \n",(4*sizeTable),timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);;
 }
@@ -291,35 +296,42 @@ void SISD(){
     double timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv;
 
     for(int j=0;j<repeatNumber;j++){
-        startCounter();
         for(int i=0;i<sizeTable;i++){
+            startTime = clock();
             SumSISD(a[i],b[i],&resultSum[i]);
+            timeToShowSum += ((double)clock() - startTime)/CLOCKS_PER_SEC*1000.0;
         }
-        timeToShowSum += stopCounter();
+        
 
-            startCounter();
+        
         for(int i=0;i<sizeTable;i++){
+            startTime = clock();
             DivSISD(a[i],b[i],&resultDiv[i]);
+            timeToShowDiv += ((double)clock() - startTime)/CLOCKS_PER_SEC*1000.0;
         }
-        timeToShowDiv += stopCounter();
+        
 
-            startCounter();
+        
         for(int i=0;i<sizeTable;i++){
+            startTime = clock();
             MulSISD(a[i],b[i],&resultMul[i]);
+            timeToShowMul += ((double)clock() - startTime)/CLOCKS_PER_SEC*1000.0;
         }
-        timeToShowMul += stopCounter();
+        
 
-            startCounter();
+        
         for(int i=0;i<sizeTable;i++){
+            startTime = clock();
             SubSISD(a[i],b[i],&resultSub[i]);
+            timeToShowSub += ((double)clock() - startTime)/CLOCKS_PER_SEC*1000.0;
         }
-        timeToShowSub += stopCounter();
+        
     }
 
-    timeToShowSum = timeToShowSum/(float)repeatNumber;
-    timeToShowDiv = timeToShowDiv/(float)repeatNumber;
-    timeToShowMul = timeToShowMul/(float)repeatNumber;
-    timeToShowSub = timeToShowSub/(float)repeatNumber;
+    timeToShowSum = timeToShowSum/(float)(repeatNumber*sizeTable);
+    timeToShowDiv = timeToShowDiv/(float)(repeatNumber*sizeTable);
+    timeToShowMul = timeToShowMul/(float)(repeatNumber*sizeTable);
+    timeToShowSub = timeToShowSub/(float)(repeatNumber*sizeTable);
 
     printf("Liczba liczb: %d\nSredni czas [ms]: \n+ %lf \n- %lf \n* %lf \n/ %lf \n",(4*sizeTable),timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);
 }
