@@ -11,19 +11,12 @@
 //mierzenie wywołania czasu samych funkcji (bez for itd) -- done
 //przekazywanie i obliczanie po 1 parametrze -- chyba bez sensu, wywolanie funkcji jest kosztowne i na pewnio wyjdzie dluzej, ale przez 4x wieksza ilosc wywolania funkcji
 
-#define sizeTable 2048 
+#define sizeTable 1024 
 #define naWektorach 0
-#define repeatNumber 10000
+#define repeatNumber 10
 
 clock_t startTime;
-
-void startCounter(){
-    startTime = clock();
-}
-
-double stopCounter(){
-    return ((double)clock() - startTime)/CLOCKS_PER_SEC*1000.0;
-}
+double timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv;
 
 struct vec {
     float a;
@@ -251,7 +244,6 @@ void makeRandNumb(){
 }
 
 void SIMD(){
-    double timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv;
     
     for(int j=0;j<repeatNumber;j++){
 
@@ -289,11 +281,9 @@ void SIMD(){
     timeToShowMul = timeToShowMul/(float)(repeatNumber*sizeTable);
     timeToShowSub = timeToShowSub/(float)(repeatNumber*sizeTable);
 
-    printf("Liczba liczb: %d\nSredni czas [ms]: \n+ %lf \n- %lf \n* %lf \n/ %lf \n",(4*sizeTable),timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);;
 }
 
 void SISD(){
-    double timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv;
 
     for(int j=0;j<repeatNumber;j++){
         for(int i=0;i<sizeTable;i++){
@@ -333,19 +323,64 @@ void SISD(){
     timeToShowMul = timeToShowMul/(float)(repeatNumber*sizeTable);
     timeToShowSub = timeToShowSub/(float)(repeatNumber*sizeTable);
 
-    printf("Liczba liczb: %d\nSredni czas [ms]: \n+ %lf \n- %lf \n* %lf \n/ %lf \n",(4*sizeTable),timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);
 }
 
 int main(){
+
     srand(time(NULL));
     makeRandNumb();
 
     if(naWektorach){
         printf("Typ obliczen: SIMD\n");
         SIMD();
+        printf("Liczba liczb: %d\nSredni czas [ms]: \n+ %lf \n- %lf \n* %lf \n/ %lf \n",(4*sizeTable),timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);
+
+
+        	FILE *file;
+			char str[4];
+			char name[4+9] = {"SIMD_"};
+			char end[4]={".txt"};
+
+			sprintf(str, "%d", (4*sizeTable));
+			strcat(name, str);
+			//puts(name);
+			strcat(name, end);
+			//puts(name);
+
+			if(file = fopen(name, "w"))
+			{
+				fprintf(file, "Typ obliczen: SIMD\nLiczba liczb: %d\nSredni czas [ms]: \n+ %lf \n- %lf \n* %lf \n/ %lf \n", (4*sizeTable),timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);
+			}
+			else
+			{
+				printf("Wystąpił problem z otworzeniem pliku.\n");
+			}
+
+
     }else{
         printf("Typ obliczen: SISD\n");
         SISD();
+        printf("Liczba liczb: %d\nSredni czas [ms]: \n+ %lf \n- %lf \n* %lf \n/ %lf \n",(4*sizeTable),timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);
+
+            FILE *file;
+			char str[4];
+			char name[4+9] = {"SISD_"};
+			char end[4]={".txt"};
+
+			sprintf(str, "%d", (4*sizeTable));
+			strcat(name, str);
+			//puts(name);
+			strcat(name, end);
+			//puts(name);
+
+			if(file = fopen(name, "w"))
+			{
+				fprintf(file, "Typ obliczen: SISD\nLiczba liczb: %d\nSredni czas [ms]: \n+ %lf \n- %lf \n* %lf \n/ %lf \n", (4*sizeTable),timeToShowSum,timeToShowSub,timeToShowMul,timeToShowDiv);
+			}
+			else
+			{
+				printf("Wystąpił problem z otworzeniem pliku.\n");
+			}
     }
 
 
